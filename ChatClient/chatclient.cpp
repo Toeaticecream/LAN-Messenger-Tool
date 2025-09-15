@@ -266,7 +266,7 @@ void ChatClient::onSend()
         return;
     }
     QString msg = inputEdit->toPlainText();
-
+    inputEdit->clear();
     if (msg.isEmpty())
     {
         return;  // 不发送空消息

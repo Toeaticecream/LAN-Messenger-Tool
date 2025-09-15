@@ -2,6 +2,7 @@
 
 #include <QHBoxLayout>
 #include <QScrollBar>
+#include <QTimer>
 #if QT_VERSION < QT_VERSION_CHECK(5, 15, 0)
     #include <QVariant>
 #endif
@@ -46,7 +47,10 @@ void ChatWindow::addMessage(const QString &text, MessageType type)
     removeMessage();
 
     // 自动滚动到底部
-    scrollArea->verticalScrollBar()->setValue(scrollArea->verticalScrollBar()->maximum());
+    QTimer::singleShot(100, this, [this] {
+        // 滚动到最底部
+        scrollArea->verticalScrollBar()->setValue(scrollArea->verticalScrollBar()->maximum());
+    });
 }
 
 void ChatWindow::removeMessage()
