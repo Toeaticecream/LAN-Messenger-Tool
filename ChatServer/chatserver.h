@@ -8,7 +8,8 @@
 #include <QLineEdit>
 #include <QLabel>
 #include <QTextEdit>
-
+#include "chatwindow.h"
+#include "configwidget.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -21,8 +22,6 @@ class ChatServer : public QWidget
     Q_OBJECT
 
 public:
-
-
     ChatServer(QWidget *parent = nullptr);
     ~ChatServer();
 
@@ -38,10 +37,11 @@ private:
     QPushButton* listenButton;
     QPushButton* sendButton;
     QLabel* stateLabel;
-    QTextEdit* messageEdit;
+    ChatWindow* chatWindow;
     QTextEdit* inputEdit;
+    ConfigWidget* configWidget;
+    QPushButton* cleanButton;
 
-    void appendMessage(const QString &prefix, const QString &msg, const QColor &color);
 
 private slots:
     void onReceived();
@@ -49,5 +49,6 @@ private slots:
     void onClickedListenButton(bool checked);
     void onConnected();
     void onDisconnected();
+
 };
 #endif // CHATSERVER_H

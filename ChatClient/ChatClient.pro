@@ -16,16 +16,30 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    chatwindow.cpp \
+    config.cpp \
+    configwidget.cpp \
     main.cpp \
     chatclient.cpp \
+    messagebubble.cpp \
     resource.cpp
 
 HEADERS += \
     chatclient.h \
+    chatwindow.h \
+    config.h \
+    configwidget.h \
+    messagebubble.h \
     resource.h
 
 FORMS += \
     chatclient.ui
+
+RESOURCES += \
+        resource.qrc
+
+RC_FILE = resource.rc
+
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

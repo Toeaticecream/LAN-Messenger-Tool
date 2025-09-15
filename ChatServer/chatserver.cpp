@@ -8,6 +8,7 @@
 #include <QMessageBox>
 #include <QSplitter>
 #include "resource.h"
+
 ChatServer::ChatServer(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::ChatServer)
@@ -20,11 +21,11 @@ ChatServer::ChatServer(QWidget *parent)
     // 创建控件
     ipLineEdit = new QLineEdit(this);
     ipLineEdit->setPlaceholderText("IP");
-    ipLineEdit->setText("192.168.137.1");
+
 
     portLineEdit = new QLineEdit(this);
     portLineEdit->setPlaceholderText("端口");
-    portLineEdit->setText("8080");
+
 
     listenButton = new QPushButton("监听", this);
     listenButton->setCheckable(true);
@@ -32,15 +33,24 @@ ChatServer::ChatServer(QWidget *parent)
     sendButton->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Expanding);
 
     stateLabel = new QLabel("未连接客户端", this);
-    messageEdit = new QTextEdit(this);
-    messageEdit->setReadOnly(true);     // 设置只读
-    messageEdit->setWordWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere); // 自动换行
-    messageEdit->setPlaceholderText("消息记录:");   // 初始文本
+    chatWindow = new ChatWindow(this);
 
     inputEdit = new QTextEdit(this);
     inputEdit->setPlaceholderText("输入发送信息");
     sendButton->setEnabled(false); // 默认没有客户端连接不可发送
 
+    configWidget = new ConfigWidget(this);
+    ipLineEdit->setText(configWidget->getIp());
+    portLineEdit->setText(configWidget->getPort());
+    chatWindow->onConfigMessageBubble(configWidget->getSenderBgColor(),
+                                      configWidget->getSenderTextColor(),
+                                      configWidget->getReceiverBgColor(),
+                                      configWidget->getReceiverTextColor(),
+                                      configWidget->getMessageBubbleMaxCount(),
+                                      configWidget->getFontSize());
+
+
+    cleanButton = new QPushButton("清空消息",this);
     // 布局
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
     QHBoxLayout *connectLayout = new QHBoxLayout();
@@ -52,12 +62,16 @@ ChatServer::ChatServer(QWidget *parent)
     mainLayout->addLayout(connectLayout);
     mainLayout->addWidget(stateLabel);
     mainLayout->addWidget(splitter);
-    splitter->addWidget(messageEdit);
+    splitter->addWidget(chatWindow);
     splitter->addWidget(sendWidget);
+    splitter->setStretchFactor(0, 3);  // index 0 = chatWindow
+    splitter->setStretchFactor(1, 1);  // index 1 = sendWidget
 
     connectLayout->addWidget(ipLineEdit);
     connectLayout->addWidget(portLineEdit);
     connectLayout->addWidget(listenButton);
+    connectLayout->addWidget(cleanButton);
+    connectLayout->addWidget(configWidget);
 
 
     sendLayout->addWidget(inputEdit);
@@ -70,7 +84,8 @@ ChatServer::ChatServer(QWidget *parent)
     connect(sendButton, &QPushButton::clicked, this, &ChatServer::onSend);
     connect(server, &QTcpServer::newConnection, this, &ChatServer::onConnected);
 
-
+    connect(configWidget, &ConfigWidget::configMessageBubble, chatWindow, &ChatWindow::onConfigMessageBubble);
+    connect(cleanButton, &QPushButton::clicked, chatWindow, &ChatWindow::onClean);
     this->setStyleSheet(StyleSheet);
 }
 
@@ -161,9 +176,12 @@ void ChatServer::onClickedListenButton(bool checked)
 
 void ChatServer::onReceived()
 {
-    if (!clientSocket) return;
+    if (!clientSocket)
+    {
+        return;
+    }
     QByteArray data = clientSocket->readAll();
-    appendMessage("客户端",QString::fromUtf8(data),Qt::white);
+    chatWindow->addMessage(QString::fromUtf8(data), ChatWindow::Receiver);
 }
 
 void ChatServer::onSend()
@@ -174,26 +192,12 @@ void ChatServer::onSend()
     }
     QString msg = inputEdit->toPlainText();
 
-    if (msg.isEmpty()) {
+    if (msg.isEmpty())
+    {
         return;  // 不发送空消息
     }
     clientSocket->write(msg.toUtf8());
 
-    appendMessage("服务端",msg,Qt::yellow);
+    chatWindow->addMessage(msg, ChatWindow::Sender);
 }
 
-void ChatServer::appendMessage(const QString &prefix, const QString &msg, const QColor &color)
-{
-    QTextCursor cursor = messageEdit->textCursor();
-    cursor.movePosition(QTextCursor::End);
-
-    QTextCharFormat format_old = cursor.charFormat();
-    QTextCharFormat format = format_old;
-    format.setForeground(color);
-
-    cursor.insertText(prefix + "\n" + msg + "\n", format);
-
-    cursor.setCharFormat(format_old);
-
-    cursor.insertText("\n", format_old);
-}

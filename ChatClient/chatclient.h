@@ -7,6 +7,9 @@
 #include <QLineEdit>
 #include <QLabel>
 #include <QTextEdit>
+#include <QTimer>
+#include "chatwindow.h"
+#include "configwidget.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -33,15 +36,26 @@ private:
     QPushButton* connectButton;
     QPushButton* sendButton;
     QLabel* stateLabel;
-    QTextEdit* messageEdit;
+    ChatWindow* chatWindow;
     QTextEdit* inputEdit;
-    void appendMessage(const QString &prefix, const QString &msg, const QColor &color);
+    ConfigWidget* configWidget;
+    QPushButton* cleanButton;
+
+    QTimer *timeoutTimer;
+    int m_connectTimeoutMs = 5000;  // 超时时间，单位毫秒
+    int m_reconnectCount = 0;
+    int m_reconnectMaxCount = 0;
+
+private:
+    void connectHost();
 private slots:
     void onConnected();
     void onDisconnected();
     void onReceived();
     void onSend();
     void onClickedConnectButton(bool checked);
+    void onError(QAbstractSocket::SocketError socketError);
+    void onTimeoutTimer();
 };
 
 #endif // CHATCLIENT_H

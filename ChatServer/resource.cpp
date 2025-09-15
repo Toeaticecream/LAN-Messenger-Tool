@@ -14,6 +14,25 @@ const QString StyleSheet=R"(
             font-weight: bold;
         }
 
+        /* QScrollArea 外层样式 */
+        QScrollArea {
+            background-color: #3c3f41;
+            color: #ffffff;
+            border: 1px solid #555555;
+            border-radius: 4px;
+            padding: 4px;
+        }
+
+        QWidget[ContainerWidget="true"] {
+            background-color: transparent;
+        }
+
+        /* QScrollArea 外层样式 */
+        QScrollArea[MessageBubble="true"] {
+            background: transparent;
+            border: none;
+        }
+
         /* 输入框和消息显示框 */
         QLineEdit, QTextEdit {
             background-color: #3c3f41;
@@ -75,29 +94,38 @@ const QString StyleSheet=R"(
             background: #777777;
         }
 
+        /* 滑块两侧轨道 */
+        QScrollBar::add-page:vertical,
+        QScrollBar::sub-page:vertical {
+            background: #2b2b2b;
+        }
+
         QScrollBar::add-line:vertical,
         QScrollBar::sub-line:vertical {
             background: none;
-        }
-
-        QScrollBar:horizontal {
-            background: #2b2b2b;
-            height: 12px;
-            margin: 0px 0px 0px 0px;
+            border: none;
         }
 
         QScrollBar::handle:horizontal {
-            background: #555555;
+            background: #606060;
             min-width: 20px;
             border-radius: 6px;
         }
 
         QScrollBar::handle:horizontal:hover {
-            background: #777777;
+            background: #505050;
         }
 
+        /* 滑块两侧轨道 */
+        QScrollBar::add-page:horizontal,   /* 滑块右侧 */
+        QScrollBar::sub-page:horizontal {  /* 滑块左侧 */
+            background: #777777;           /* 轨道颜色 */
+        }
+
+        /* 隐藏滚动条两端按钮 */
         QScrollBar::add-line:horizontal,
         QScrollBar::sub-line:horizontal {
             background: none;
+            border: none;
         }
     )";
