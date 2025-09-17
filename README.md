@@ -1,4 +1,5 @@
 # LAN-Messenger-Tool
+![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux-green) ![Framework](https://img.shields.io/badge/framework-Qt5-blue) ![Language](https://img.shields.io/badge/language-C++-yellow) ![License](https://img.shields.io/badge/license-MIT-orange) [![Download](https://img.shields.io/badge/download-latest-brightgreen)](https://github.com/guo-yong-kang/LAN-Messenger-Tool/releases/latest/download/LAN-Messenger-Tool.zip)
 本项目是一款针对局域网内嵌入式开发的简易消息发送工具，解决了在开发调试过程中信息传递不便的问题。相比传统的文件传输工具或即时通讯软件，本工具专注于：
 
   快速、稳定的文本消息通信
