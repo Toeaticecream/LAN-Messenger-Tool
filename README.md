@@ -39,7 +39,7 @@
 
 ## Windows
 
-  1. [下载最新版] https://github.com/guo-yong-kang/LAN-Messenger-Tool/releases/latest/download/LAN-Messenger-Tool.zip 
+  1. [下载最新版](https://github.com/guo-yong-kang/LAN-Messenger-Tool/releases/latest/download/LAN-Messenger-Tool.zip) 
 
   2. 解压、运行exe文件。
 
